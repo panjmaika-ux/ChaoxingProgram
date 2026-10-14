@@ -7,9 +7,12 @@ import control as ct
 plt.rcParams['axes.unicode_minus'] = False
 plt.rcParams['mathtext.fontset'] = 'cm'
 
-# 初始化session_state，存储多条对比曲线
+# 初始化session_state：每条记录同时存(wn,zeta,t,y,poles)
 if "curve_list" not in st.session_state:
     st.session_state["curve_list"] = []
+
+# 配色池，多组保存自动轮换颜色
+color_palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#9467bd", "#8c564b", "#e377c2"]
 
 # ===================== Streamlit页面中文UI（网页界面，不会乱码）=====================
 st.set_page_config(page_title="二阶系统仿真探究", layout="wide")
@@ -35,13 +38,17 @@ t_out, y_out = ct.step_response(sys, T=t)
 # 求极点
 poles = sys.poles()
 
-# ======================== 绘图：Unit Step Response 单位阶跃响应 ========================
+# ======================== 绘图1：Unit Step Response 单位阶跃响应 ========================
 fig1, ax1 = plt.subplots(figsize=(8, 6))
-# 当前滑块对应的曲线
-ax1.plot(t_out, y_out, label=f"$\zeta$={zeta:.3f}, $\omega_n$={wn:.2f}", linewidth=2)
-# 绘制已经保存的叠加对比曲线
-for (wn_s, zeta_s, t_s, y_s) in st.session_state["curve_list"]:
-    ax1.plot(t_s, y_s, alpha=0.6, label=f"saved:$\zeta$={zeta_s:.2f},$\omega_n$={wn_s:.2f}")
+# 当前滑块实时曲线：红色
+ax1.plot(t_out, y_out, label=f"current:$\zeta$={zeta:.3f}, $\omega_n$={wn:.2f}",
+         color="red", linewidth=2)
+
+# 绘制历史保存的曲线，按顺序取配色池颜色
+for idx, (wn_s, zeta_s, t_s, y_s, pole_s) in enumerate(st.session_state["curve_list"]):
+    c = color_palette[idx % len(color_palette)]
+    ax1.plot(t_s, y_s, color=c, alpha=0.75, linewidth=1.8,
+             label=f"saved{idx+1}:$\zeta$={zeta_s:.2f},$\omega_n$={wn_s:.2f}")
 
 ax1.set_title("Unit Step Response")
 ax1.set_xlabel("$t$ / s")
@@ -51,16 +58,21 @@ ax1.legend(loc="upper right")
 ax1.set_xlim(0, 12)
 ax1.set_ylim(0, 1.15)
 
-# ======================== 绘图：S‑plane Pole Map s平面极点分布 ========================
+# ======================== 绘图2：S‑plane Pole Map s平面极点分布 ========================
 fig2, ax2 = plt.subplots(figsize=(8, 6))
-# 画等阻尼圆
+# 当前wn对应的等阻尼圆
 theta = np.linspace(0, 2 * np.pi, 200)
 xc = wn * np.cos(theta)
 yc = wn * np.sin(theta)
 ax2.plot(xc, yc, "k--", alpha=0.6, label=r"$\omega_n$ circle")
 
-# 绘制极点
+# 当前实时极点：红色x
 ax2.scatter(np.real(poles), np.imag(poles), marker="x", color="red", s=120, linewidth=2)
+
+# 绘制历史保存的极点，和对应响应曲线使用完全相同颜色
+for idx, (wn_s, zeta_s, t_s, y_s, pole_s) in enumerate(st.session_state["curve_list"]):
+    c = color_palette[idx % len(color_palette)]
+    ax2.scatter(np.real(pole_s), np.imag(pole_s), marker="x", color=c, s=100, linewidth=2)
 
 ax2.set_title("S‑plane Pole Map")
 ax2.set_xlabel("$\\sigma$")
@@ -85,11 +97,12 @@ for idx, p in enumerate(poles):
     pole_text += f"极点{idx+1}: {p:.3f}\n"
 st.code(pole_text)
 
-# ===================== 保存 / 清空按钮（原样保留你的逻辑） =====================
+# ===================== 保存 / 清空按钮 =====================
 c1, c2 = st.columns(2)
 with c1:
     if st.button("保存本组曲线，用于叠加对比"):
-        st.session_state["curve_list"].append((wn, zeta, t_out, y_out))
+        # 保存同时存入极点poles
+        st.session_state["curve_list"].append((wn, zeta, t_out, y_out, poles))
         st.success(f"已保存：ζ={zeta:.3f}，ωₙ={wn:.2f}")
 with c2:
     if st.button("清空叠加曲线列表"):
@@ -98,12 +111,8 @@ with c2:
 
 st.markdown("### 📝课堂探究任务")
 st.markdown("""
-**任务A（固定 ωₙ=1 rad/s）**
+**任务（固定 ωₙ=1 rad/s）**
 依次设置 ζ = 0、0.3、0.707、1、1.5，每设置一组点击【保存本组曲线】，观察阻尼比对响应与极点的影响。
-**任务B（固定 ζ=0.707）**
-依次设置 ωₙ =1、2、3 rad/s，保存曲线，观察自然振荡频率如何改变系统响应快慢。
-> 观察要点：
-> 1. ζ主要影响超调量（平稳性）；
-> 2. ωₙ主要改变响应速度，不改变超调大小；
-> 3. s平面圆半径跟随ωₙ同步缩放。
+
+> 💡提示：同一组参数的阶跃响应曲线与s平面极点使用**相同颜色**，便于对照分析。
 """)
