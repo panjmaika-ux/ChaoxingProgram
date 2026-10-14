@@ -51,7 +51,7 @@ with col1:
     st.pyplot(fig1)
 
 with col2:
-    st.subheader("s‑平面极点分布")
+    st.subheader("s平面极点分布")
     fig2, ax2 = plt.subplots(figsize=(6, 4))
     # 圆半径跟随当前ωn实时变化
     theta = np.linspace(0, 2 * np.pi, 200)
