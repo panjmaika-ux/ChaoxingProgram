@@ -1,3 +1,9 @@
+import matplotlib.pyplot as plt
+# ==========解决云平台中文方块乱码 新增开始==========
+plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei']
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示方框
+# ==========解决云平台中文方块乱码 新增结束==========
+
 import streamlit as st
 import control as ct
 import matplotlib.pyplot as plt
