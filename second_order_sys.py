@@ -22,7 +22,7 @@ st.latex(r"G(s)=\frac{\omega_n^2}{s^2 + 2\zeta\omega_n s+\omega_n^2}")
 
 col1, col2 = st.columns(2)
 with col1:
-    zeta = st.slider("阻尼比 $\\zeta$", min_value=0.01, max_value=1.2, value=0.707, step=0.01)
+    zeta = st.slider("阻尼比 $\\zeta$", min_value=0.01, max_value=1.8, value=0.707, step=0.01)
 with col2:
     wn = st.slider("自然振荡频率 $\\omega_n$(rad/s)", min_value=0.2, max_value=3.0, value=1.0, step=0.05)
 
@@ -56,7 +56,7 @@ ax1.set_ylabel("$c(t)$")
 ax1.grid(True)
 ax1.legend(loc="upper right")
 ax1.set_xlim(0, 12)
-ax1.set_ylim(0, 1.15)
+ax1.set_ylim(0, 1.8)
 
 # ======================== 绘图2：S‑plane Pole Map s平面极点分布 ========================
 fig2, ax2 = plt.subplots(figsize=(8, 6))
