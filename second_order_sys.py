@@ -5,6 +5,11 @@ plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示方框
 # ==========解决云平台中文方块乱码 新增结束==========
 
 import streamlit as st
+import numpy as np
+import control as ct
+
+
+import streamlit as st
 import control as ct
 import matplotlib.pyplot as plt
 import numpy as np
