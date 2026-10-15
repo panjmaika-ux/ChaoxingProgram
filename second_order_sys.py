@@ -22,7 +22,7 @@ st.latex(r"G(s)=\frac{\omega_n^2}{s^2 + 2\zeta\omega_n s+\omega_n^2}")
 
 col1, col2 = st.columns(2)
 with col1:
-    zeta = st.slider("阻尼比 $\\zeta$", min_value=0.01, max_value=1.8, value=0.707, step=0.01)
+    zeta = st.slider("阻尼比 $\\zeta$", min_value=0.01, max_value=3, value=0.707, step=0.01)
 with col2:
     wn = st.slider("自然振荡频率 $\\omega_n$(rad/s)", min_value=0.2, max_value=2.0, value=1.0, step=0.05)
 
