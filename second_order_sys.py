@@ -24,7 +24,7 @@ col1, col2 = st.columns(2)
 with col1:
     zeta = st.slider("阻尼比 $\\zeta$", min_value=0.00, max_value=1.8, value=0.707, step=0.01)
 with col2:
-    wn = st.slider("自然振荡频率 $\\omega_n$(rad/s)", min_value=0.2, max_value=2.0, value=1.0, step=0.05)
+    wn = st.slider("自然振荡频率 $\\omega_n$(rad/s)", min_value=0.2, max_value=3.0, value=1.0, step=0.05)
 
 # 构造二阶系统传递函数
 num = [wn ** 2]
@@ -56,7 +56,7 @@ ax1.set_ylabel("$c(t)$")
 ax1.grid(True)
 ax1.legend(loc="upper right")
 ax1.set_xlim(0, 12)
-ax1.set_ylim(0, 2)
+ax1.set_ylim(0, 2.5)
 
 # ======================== 绘图2：S‑plane Pole Map s平面极点分布 ========================
 fig2, ax2 = plt.subplots(figsize=(8, 6))
