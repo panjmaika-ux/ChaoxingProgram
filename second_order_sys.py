@@ -56,7 +56,7 @@ ax1.set_ylabel("$c(t)$")
 ax1.grid(True)
 ax1.legend(loc="upper right")
 ax1.set_xlim(0, 12)
-ax1.set_ylim(0, 2.5)
+ax1.set_ylim(-1, 2.5)
 
 # ======================== 绘图2：S‑plane Pole Map s平面极点分布 ========================
 fig2, ax2 = plt.subplots(figsize=(8, 6))
