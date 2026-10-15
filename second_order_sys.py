@@ -22,7 +22,7 @@ st.latex(r"G(s)=\frac{\omega_n^2}{s^2 + 2\zeta\omega_n s+\omega_n^2}")
 
 col1, col2 = st.columns(2)
 with col1:
-    zeta = st.slider("阻尼比 $\\zeta$", min_value=0.01, max_value=2, value=0.707, step=0.01)
+    zeta = st.slider("阻尼比 $\\zeta$", min_value=0.01, max_value=1.8, value=0.707, step=0.01)
 with col2:
     wn = st.slider("自然振荡频率 $\\omega_n$(rad/s)", min_value=0.2, max_value=2.0, value=1.0, step=0.05)
 
@@ -48,7 +48,7 @@ ax1.plot(t_out, y_out, label=f"current:$\zeta$={zeta:.3f}, $\omega_n$={wn:.2f}",
 for idx, (wn_s, zeta_s, t_s, y_s, pole_s) in enumerate(st.session_state["curve_list"]):
     c = color_palette[idx % len(color_palette)]
     ax1.plot(t_s, y_s, color=c, alpha=0.75, linewidth=1.8,
-             label=f"saved{idx+1}:$\zeta$={zeta_s:.3f},$\omega_n$={wn_s:.2f}")
+             label=f"saved{idx+1}:$\zeta$={zeta_s:.2f},$\omega_n$={wn_s:.2f}")
 
 ax1.set_title("Unit Step Response")
 ax1.set_xlabel("$t$ / s")
@@ -56,7 +56,7 @@ ax1.set_ylabel("$c(t)$")
 ax1.grid(True)
 ax1.legend(loc="upper right")
 ax1.set_xlim(0, 12)
-ax1.set_ylim(0, 2)
+ax1.set_ylim(0, 1.8)
 
 # ======================== 绘图2：S‑plane Pole Map s平面极点分布 ========================
 fig2, ax2 = plt.subplots(figsize=(8, 6))
