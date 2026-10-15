@@ -16,7 +16,7 @@ color_palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#9467bd", "#8c564b", "#e377c2
 
 # ===================== Streamlit页面中文UI（网页界面，不会乱码）=====================
 st.set_page_config(page_title="二阶系统仿真探究", layout="wide")
-st.title("二阶系统仿真探究：s平面极点与阶跃响应联动")
+st.title("Streamlit交互式二阶系统仿真工具")
 
 st.latex(r"G(s)=\frac{\omega_n^2}{s^2 + 2\zeta\omega_n s+\omega_n^2}")
 
