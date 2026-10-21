@@ -7,7 +7,7 @@ st.set_page_config(page_title="二阶系统仿真", layout="wide")
 
 # 标题，控制字号
 st.markdown("## Streamlit交互式仿真工具")
-st.markdown("二阶系统传递函数：$G(s)=\\dfrac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}$")
+st.markdown("二阶系统闭环传递函数：$\\Phi(s)=\\dfrac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}$")
 
 # 初始化session_state，保存多条曲线
 if "curve_list" not in st.session_state:
