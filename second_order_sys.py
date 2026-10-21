@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 # ---------------------- 页面基础设置 ----------------------
 st.set_page_config(page_title="二阶系统仿真", layout="wide")
 
-# 【修改点1】替换标题，控制字体大小，不再用st.title()大标题
-st.markdown("# Streamlit交互式仿真工具")
+# 标题，控制字号
+st.markdown("## Streamlit交互式仿真工具")
 st.markdown("二阶系统传递函数：$G(s)=\\dfrac{\\omega_n^2}{s^2+2\\zeta\\omega_n s+\\omega_n^2}$")
 
 # 初始化session_state，保存多条曲线
@@ -37,9 +37,8 @@ else:
 p1 = -zeta * wn + 1j * wn * np.sqrt(max(1-zeta**2,0))
 p2 = -zeta * wn - 1j * wn * np.sqrt(max(1-zeta**2,0))
 
-# ---------------------- 绘图（两张图统一尺寸，关键修改） ----------------------
-# 【修改点2】统一画布figsize，两张图尺寸一致，缩小画面
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5))
+# ---------------------- 绘图（两张图统一画布尺寸，修复S平面椭圆问题） ----------------------
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9,4))
 
 # 图1：单位阶跃响应 Unit Step Response
 ax1.plot(t, y_out, "r", label=f"current: ζ={zeta:.3f}, ωₙ={wn:.2f}")
@@ -54,7 +53,7 @@ ax1.legend(fontsize=8)
 ax1.set_xlim(0,12)
 
 # 图2：S-plane Pole Map
-# 绘制单位圆(ωn圆)
+# 绘制ωn圆
 theta_circle = np.linspace(0, np.pi*2, 200)
 ax2.plot(wn*np.cos(theta_circle), wn*np.sin(theta_circle), "k--", lw=1, label="$\\omega_n$ circle")
 ax2.plot(np.real(p1), np.imag(p1), "rx", markersize=10)
@@ -65,12 +64,18 @@ for (wn_save, zeta_save, t_save, y_save, color) in st.session_state["curve_list"
     p2s = -zeta_save*wn_save - 1j*wn_save*np.sqrt(max(1-zeta_save**2,0))
     ax2.plot(np.real(p1s), np.imag(p1s), marker="x", c=color, markersize=9)
     ax2.plot(np.real(p2s), np.imag(p2s), marker="x", c=color, markersize=9)
+
 ax2.set_title("S-plane Pole Map")
 ax2.set_xlabel("σ")
 ax2.set_ylabel("jω")
 ax2.grid(True)
 ax2.axhline(y=0, color="k", lw=0.8)
 ax2.axvline(x=0, color="k", lw=0.8)
+# ========== 核心修复代码：强制S平面x、y轴等比例，保证圆不会拉伸成椭圆 ==========
+ax2.axis('equal')
+# 固定坐标轴范围，适配wn最大3
+ax2.set_xlim(-3.2, 1.2)
+ax2.set_ylim(-3.2, 3.2)
 ax2.legend(fontsize=8)
 
 plt.tight_layout()
@@ -82,7 +87,6 @@ st.write(f"极点1：{p1:.3f}")
 st.write(f"极点2：{p2:.3f}")
 
 # ---------------------- 保存 / 清空按钮（完全保留原有逻辑） ----------------------
-# 准备配色，新增曲线自动分配颜色
 color_list = ["#1f77b4", "#2ca02c", "#ff7f0e", "#9467bd", "#8c564b"]
 c1, c2 = st.columns(2)
 with c1:
@@ -94,6 +98,7 @@ with c2:
     if st.button("清空叠加曲线列表"):
         st.session_state["curve_list"].clear()
         st.info("已清空叠加曲线")
+
 
 # ---------------------- 课堂探究任务（保留原文） ----------------------
 st.markdown("### 📝操作说明")
